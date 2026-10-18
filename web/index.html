@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ETH Flow Monitor</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="top">
+    <strong>ETH Flow Monitor</strong>
+    <form id="search" role="search">
+      <input id="q" placeholder="Search address or tx hash" aria-label="Search address or transaction hash">
+    </form>
+    <span class="muted" id="net">Network: Sepolia (live)</span>
+  </header>
+  <div class="layout">
+    <nav aria-label="Main">
+      <a href="#alerts">Alerts</a>
+      <a href="#feed">Live feed</a>
+      <a href="#watchlist">Watchlist</a>
+      <a href="#sanctions">Sanctions list</a>
+      <a href="#inspect">Tx inspector</a>
+    </nav>
+    <div class="content">
+      <div id="live" class="status" role="status" aria-live="polite"></div>
+      <main id="main" tabindex="-1"></main>
+    </div>
+  </div>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

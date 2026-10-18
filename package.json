@@ -1,0 +1,26 @@
+{
+  "name": "eth-flow-monitor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Real-time ETH transfer monitoring on Sepolia using EIP-7708 logs",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "smoke": "tsx scripts/smoke.ts",
+    "demo": "tsx scripts/demo-internal-transfer.ts",
+    "preview:web": "tsx scripts/web-preview.ts"
+  },
+  "dependencies": {
+    "@fastify/static": "^10.1.6",
+    "fastify": "^5.2.0",
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^5.0.4"
+  }
+}
