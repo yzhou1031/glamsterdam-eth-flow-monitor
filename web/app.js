@@ -285,7 +285,8 @@ function renderAlerts() {
       <tbody>${rows || `<tr><td colspan="7" class="muted">${esc(empty)}</td></tr>`}</tbody>
     </table></div>
     <section id="detail" class="detail" aria-live="polite"><p class="muted">Select an alert to see its detail.</p></section>
-    <p class="muted">Live from Sepolia since ${esc(new Date(session.since).toLocaleTimeString())}${lastBlock ? `; last block ${esc(lastBlock)}` : ''}. Alerts and the watchlist are saved in this browser only.</p>`;
+    <p class="muted">Live from Sepolia since ${esc(new Date(session.since).toLocaleTimeString())}${lastBlock ? `; last block ${esc(lastBlock)}` : ''}. Alerts and the watchlist are saved in this browser only.
+      <a href="https://github.com/yzhou1031/glamsterdam-eth-flow-monitor" target="_blank" rel="noopener">Source code on GitHub</a></p>`;
   $('#filter').addEventListener('change', (e) => { alertFilter = e.target.value; renderAlerts(); });
   $('#reset-demo').addEventListener('click', () => { resetDemo(); renderAlerts(); });
   $('#dismiss-intro')?.addEventListener('click', () => { store.introDismissed = true; save(); renderAlerts(); });
