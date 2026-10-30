@@ -11,7 +11,7 @@ It relies on one Glamsterdam change, **EIP-7708**, which makes every ETH transfe
 
 ## What you can try (about 2 minutes)
 
-On your first visit, the page adds the most active Sepolia address to your watchlist, so real alerts appear within a few seconds.
+On your first visit, the page adds the most active Sepolia address (the one that received the most ETH transfers in the latest blocks) to your watchlist, so real alerts appear within a few seconds. Every minute it switches to the busiest receiver of that minute.
 
 1. **Alerts:** select an alert, then click **Escalate**, **Mark reviewed** or **False positive**. You can also add a note.
 2. **Live feed:** new ETH transfers arrive about every 12 seconds. The **Type** column shows whether each one was **Top-level** (a normal transaction) or **Internal** (made inside a contract). Internal transfers are the ones EIP-7708 makes visible.

@@ -122,15 +122,41 @@ function raiseAlerts(t) {
 // First-visit demo: watch the address that received the most ETH transfers in the latest blocks,
 // so a visitor sees real watchlist alerts within seconds without setting anything up.
 const DEMO_LABEL = 'Demo: most active address (auto-added)';
-function seedDemo(transfers) {
+const DEMO_REFRESH_MS = 60000;
+let demoWindow = []; // transfers seen since the demo address was last picked
+
+/** The address that received the most transfers, skipping addresses the viewer watches themselves. */
+function busiestReceiver(transfers) {
   const counts = new Map();
-  for (const t of transfers) counts.set(t.to_addr, (counts.get(t.to_addr) ?? 0) + 1);
-  const busiest = [...counts.entries()].sort((a, b) => b[1] - a[1])[0];
+  for (const t of transfers) {
+    const own = store.watch.some((w) => w.address === t.to_addr && w.label !== DEMO_LABEL);
+    if (!own) counts.set(t.to_addr, (counts.get(t.to_addr) ?? 0) + 1);
+  }
+  return [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
+}
+
+function seedDemo(transfers) {
+  const busiest = busiestReceiver(transfers);
   if (!busiest) return false;
-  addWatch(busiest[0], DEMO_LABEL, '');
+  addWatch(busiest, DEMO_LABEL, '');
   store.demoSeeded = true;
+  demoWindow = [];
   save();
   return true;
+}
+
+// Every minute, swap the demo address for the busiest receiver of the last minute, so alerts keep coming.
+// Earlier alerts stay; if the viewer removed the demo address, it is not brought back.
+function refreshDemo() {
+  const old = store.watch.find((w) => w.label === DEMO_LABEL);
+  const busiest = busiestReceiver(demoWindow);
+  demoWindow = [];
+  if (!old || !busiest || busiest === old.address) return;
+  store.watch = store.watch.filter((w) => w !== old);
+  addWatch(busiest, DEMO_LABEL, '');
+  save();
+  live.textContent = `Demo watchlist address updated to ${short(busiest)}, the busiest receiver of the last minute.`;
+  if (current === 'watchlist') renderWatchlist();
 }
 
 function resetDemo() {
@@ -156,6 +182,7 @@ function ingest(transfers) {
     seen.add(key);
     fresh.push(t);
     feed.unshift(t);
+    demoWindow.push(t);
     session.transfers++;
     if (t.kind === 'internal') session.internal++;
     newAlerts.push(...raiseAlerts(t));
@@ -263,7 +290,8 @@ function renderAlerts() {
     <section class="intro" aria-labelledby="intro-title">
       <h2 id="intro-title">Welcome to the ETH Flow Monitor demo</h2>
       <p>This page reads live Sepolia blocks and shows every native ETH transfer through its new EIP-7708 log, including transfers made inside contracts.
-        To show alerts straight away, it added the most active address in the latest blocks to your <a href="#watchlist">Watchlist</a>; each new transfer to or from it raises a real alert below.</p>
+        To show alerts straight away, it added the most active address in the latest blocks to your <a href="#watchlist">Watchlist</a>; each new transfer to or from it raises a real alert below.
+        Every minute it switches to whichever address received the most ETH transfers in that minute.</p>
       <ol>
         <li>Select an alert and click <strong>Escalate</strong>, <strong>Mark reviewed</strong> or <strong>False positive</strong>.</li>
         <li>In <a href="#watchlist">Watchlist</a>, add an address of your own (any "To" address from the <a href="#feed">Live feed</a> works).</li>
@@ -496,3 +524,4 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden && cu
 window.addEventListener('hashchange', route);
 route();
 poll();
+setInterval(refreshDemo, DEMO_REFRESH_MS);

@@ -45,7 +45,7 @@ A transaction's own value transfer always produces the **first** 7708 log in tha
 | Reorgs | Shows only blocks with 1+ confirmation | Detects reorgs and rolls back the affected blocks |
 | Alert delivery | Dashboard | Dashboard, webhook, email stub |
 
-On a first visit, the hosted demo adds the most active Sepolia address to the watchlist, so real alerts appear within seconds. **Reset demo** starts it over.
+On a first visit, the hosted demo adds the most active Sepolia address (the one that received the most ETH transfers in the latest blocks) to the watchlist, so real alerts appear within seconds. Every minute it switches to the busiest receiver of that minute, keeping earlier alerts. **Reset demo** starts it over.
 
 ## Quick start (local)
 
